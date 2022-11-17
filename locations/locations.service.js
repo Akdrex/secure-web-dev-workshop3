@@ -2,8 +2,29 @@
 
 const Location = require('./locations.model')
 
-function findAll () {
-	return [1,2,3,4]
+async function getAll (req, res){
+
 }
 
-module.exports.findAll = findAll
+async function getById(req, res){
+	let result = await Location.find({ _id: req.params.id });
+	res.send(result);
+}
+
+async function deleteById(req, res){
+	await model.deleteOne({ _id: params.id });
+	res.send("l'id " + params.id + " a été supprimé");
+}
+
+async function create(req, res){
+	var obj = req.body
+	Location.create(obj);
+	res.send("Objet ajouté");
+}
+
+async function update(req, res){
+	var obj = req.body
+	Location.findOneAndUpdate(params.id, obj);
+}
+
+module.exports = {getAll, getById, deleteById, create, update}

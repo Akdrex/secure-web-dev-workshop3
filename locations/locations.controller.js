@@ -3,10 +3,17 @@
 
 const router = require('express').Router()
 const locationsService = require('./locations.service')
+const {deleteById} = require("./locations.service");
 
-router.get('/locations', (req, res) => {
-	return res.status(200).send({locations: []})
-})
+router.get('/locations', locationsService.getAll);
+
+router.get('/locations/:id', locationsService.getById);
+
+router.put('/locations/:id', locationsService.update);
+
+router.post('/locations', locationsService.create)
+
+router.delete('/locations', locationsService.deleteById)
 
 
 module.exports = router
