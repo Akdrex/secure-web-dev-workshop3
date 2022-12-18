@@ -1,14 +1,15 @@
 const express = require('express')
-const locationController = require('./locations/locations.controller')
+const locationsController = require('./locations/locations.controller')
 const usersController = require('./users/user_controller')
 const app = express()
-const port = 3000
-const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
-const User = require('./users/user_model')
-const localStrategy = require('./auth/local.strategy')
+const bodyParser = require('body-parser')
+const passport = require('passport')
 const session = require('express-session')
-
+require('dotenv').config();
+const port = 6969
+const LocalStrategy = require('./auth/local.strategy')
+const JwtStrategy = require('./auth/jwt.strategy')
 
 app.use(session({
     secret: 'YOUR_SECRET_HERE',
@@ -16,18 +17,17 @@ app.use(session({
     saveUninitialized: false,
 }))
 
-
-require('dotenv').config();
-mongoose.connect(process.env.MONGO_URI).then(()=> {console.log('Connected !')});
-
 app.use(bodyParser.json())
-app.use(locationController)
+app.use(locationsController)
 app.use('/users', usersController)
+app.get('/', (req, res) => res.status(200).send({message: 'Hello World'}))
 
-app.listen(port, () => {
-    console.log(`API listening on port ${port}, visit http://localhost:${port}/`)
-})
+async function main(){
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('Connected to Mongo Database');
+    app.listen(port, () => {
+        console.log(`API listening on port ${port}, visit http://localhost:${port}/`)
+    })
+}
 
-app.get('/yolegangcaditquoi', (req, res) => {
-    res.send('Hello World!')
-})
+main();
